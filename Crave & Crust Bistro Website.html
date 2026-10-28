@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crave & Crust Bistro | Artisanal Pizzas, Burgers & Wok Specials</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Syne & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#F59E0B',
+              amber: '#D97706',
+              darkgold: '#B45309',
+              crimson: '#EF4444',
+              surface: '#121217',
+              card: '#1A1A24',
+              cardlight: '#232332',
+              border: '#2C2C3D',
+            }
+          },
+          fontFamily: {
+            heading: ['Syne', 'sans-serif'],
+            sans: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0D0D12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2C2C3D;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #F59E0B;
+    }
+    .glass-nav {
+      background: rgba(18, 18, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .text-glow {
+      text-shadow: 0 0 24px rgba(245, 158, 11, 0.35);
+    }
+    .card-glow:hover {
+      box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-[#0c0c10] text-gray-200 font-sans selection:bg-brand-gold selection:text-black antialiased overflow-x-hidden">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- Announcement Bar -->
+  <div class="bg-gradient-to-r from-brand-amber via-brand-crimson to-brand-amber text-white text-xs md:text-sm font-semibold py-2 px-4 text-center tracking-wide flex items-center justify-center gap-2 shadow-inner">
+    <span class="animate-bounce inline-block">🔥</span>
+    <span>HAPPY HOURS: Flat ₹99 Deals on Artisanal Pizzas, Smash Burgers & Starters! Use code <strong class="bg-black/30 px-2 py-0.5 rounded text-yellow-200">TASTY99</strong> for 15% off.</span>
+  </div>
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-brand-border/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-gold via-amber-600 to-brand-crimson flex items-center justify-center text-black font-black text-2xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-fire-burner"></i>
+        </div>
+        <div>
+          <span class="font-heading font-extrabold text-2xl tracking-tight text-white block leading-none">
+            CRAVE <span class="text-brand-gold">&</span> CRUST
+          </span>
+          <span class="text-[10px] tracking-widest uppercase font-semibold text-gray-400">Artisanal Bistro</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center gap-8 font-medium text-sm text-gray-300">
+        <a href="#home" class="hover:text-brand-gold transition-colors">Home</a>
+        <a href="#deals99" class="hover:text-brand-gold flex items-center gap-1.5 transition-colors text-amber-400 font-semibold">
+          <i class="fa-solid fa-tag text-xs"></i> ₹99 Offers
+        </a>
+        <a href="#menu" class="hover:text-brand-gold transition-colors">Full Menu</a>
+        <a href="#about" class="hover:text-brand-gold transition-colors">Story</a>
+        <a href="#reviews" class="hover:text-brand-gold transition-colors">Reviews</a>
+        <a href="#contact" class="hover:text-brand-gold transition-colors">Visit Us</a>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-4">
+        <!-- Quick Call Link -->
+        <a href="tel:+919876543210" class="hidden sm:flex items-center gap-2 text-xs text-gray-300 hover:text-white bg-brand-card py-2.5 px-3.5 rounded-xl border border-brand-border">
+          <i class="fa-solid fa-phone text-brand-gold"></i>
+          <span>+91 98765 43210</span>
+        </a>
+
+        <!-- Cart Trigger Button -->
+        <button id="open-cart-btn" class="relative bg-gradient-to-r from-brand-gold to-brand-amber text-black font-bold p-3 px-4 rounded-xl flex items-center gap-2.5 shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-95 transition-all">
+          <i class="fa-solid fa-bag-shopping text-base"></i>
+          <span class="text-sm hidden sm:inline">My Tray</span>
+          <span id="cart-badge-count" class="bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-extrabold ml-1">0</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-toggle" class="lg:hidden text-gray-300 hover:text-white p-2 text-xl focus:outline-none">
+          <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div id="mobile-nav" class="lg:hidden hidden bg-brand-surface border-b border-brand-border px-6 py-6 transition-all duration-300">
+      <div class="flex flex-col gap-4 text-base font-semibold">
+        <a href="#home" class="mobile-nav-link text-gray-300 hover:text-brand-gold">Home</a>
+        <a href="#deals99" class="mobile-nav-link text-amber-400 flex items-center gap-2">
+          <i class="fa-solid fa-bolt"></i> Crazy ₹99 Offers
+        </a>
+        <a href="#menu" class="mobile-nav-link text-gray-300 hover:text-brand-gold">Explore Menu</a>
+        <a href="#about" class="mobile-nav-link text-gray-300 hover:text-brand-gold">Our Story & Hygiene</a>
+        <a href="#reviews" class="mobile-nav-link text-gray-300 hover:text-brand-gold">Customer Testimonials</a>
+        <a href="#contact" class="mobile-nav-link text-gray-300 hover:text-brand-gold">Contact & Hours</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="home" class="relative min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center overflow-hidden py-16 lg:py-24">
+      <!-- Background Ambient Glow -->
+      <div class="absolute -top-36 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-brand-gold/15 rounded-full blur-[140px] pointer-events-none"></div>
+      <div class="absolute bottom-10 right-0 w-[450px] h-[450px] bg-brand-crimson/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Hero Copy -->
+          <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-card border border-brand-gold/30 text-xs md:text-sm font-semibold text-brand-gold">
+              <span class="flex h-2 w-2 rounded-full bg-brand-gold animate-ping"></span>
+              Gourmet Fire-Baked Crusts & Sizzling Delights
+            </div>
+
+            <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+              Savor The Taste of <br>
+              <span class="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-crimson bg-clip-text text-transparent text-glow">
+                Artisanal Perfection
+              </span>
+            </h1>
+
+            <p class="text-gray-300 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+              From blistered wood-fired stone pizzas and smashed prime burgers to flaming street wok noodles and rich molten desserts—crafted fresh daily with premium ingredients.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <a href="#menu" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold to-brand-amber text-black font-bold text-base hover:brightness-110 shadow-xl shadow-amber-500/25 active:scale-95 transition-all text-center flex items-center justify-center gap-2">
+                <span>Explore Full Menu</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+              </a>
+              <a href="#deals99" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-card hover:bg-brand-cardlight border border-brand-border text-white font-semibold text-base active:scale-95 transition-all text-center flex items-center justify-center gap-2">
+                <i class="fa-solid fa-fire text-brand-crimson"></i>
+                <span>View ₹99 Mega Offers</span>
+              </a>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="grid grid-cols-3 gap-4 pt-8 border-t border-brand-border/60 max-w-lg mx-auto lg:mx-0">
+              <div class="text-center lg:text-left">
+                <div class="text-xl sm:text-2xl font-bold font-heading text-brand-gold">30 Mins</div>
+                <div class="text-xs text-gray-400">Express Delivery</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-xl sm:text-2xl font-bold font-heading text-white">100% Fresh</div>
+                <div class="text-xs text-gray-400">Farm Ingredients</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-xl sm:text-2xl font-bold font-heading text-brand-crimson">4.9 ★</div>
+                <div class="text-xs text-gray-400">12k+ Happy Bites</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Media Collage / Showcase -->
+          <div class="lg:col-span-5 relative">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              <!-- Backdrop Ring -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-brand-gold/30 to-brand-crimson/20 transform rotate-3 filter blur-md"></div>
+              
+              <!-- Main Feature Image -->
+              <div class="relative rounded-3xl overflow-hidden border border-brand-border bg-brand-card shadow-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop" 
+                  alt="Artisanal Handcrafted Pizza" 
+                  class="w-full h-80 sm:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                  onerror="this.src='https://placehold.co/800x600/121217/F59E0B?text=Wood+Fired+Pizza'"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-5 left-5 right-5 flex justify-between items-end">
+                  <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-brand-gold">Chef's Signature</span>
+                    <h3 class="text-xl font-bold text-white">Truffle Smoked Mozzarella</h3>
+                    <p class="text-xs text-gray-300">San Marzano sauce & fresh basil</p>
+                  </div>
+                  <span class="bg-brand-gold text-black font-extrabold text-lg px-3 py-1.5 rounded-lg">₹349</span>
+                </div>
+              </div>
+
+              <!-- Floating Micro-card 1 -->
+              <div class="absolute -top-6 -left-6 bg-brand-surface/90 backdrop-blur-md border border-brand-border p-3 rounded-2xl shadow-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-brand-gold flex items-center justify-center text-lg">
+                  <i class="fa-solid fa-burger"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-400">Monster Patty</div>
+                  <div class="text-sm font-bold text-white">Smash Gourmet</div>
+                </div>
+              </div>
+
+              <!-- Floating Micro-card 2 -->
+              <div class="absolute -bottom-6 -right-6 bg-brand-surface/90 backdrop-blur-md border border-brand-border p-3 rounded-2xl shadow-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/20 text-brand-crimson flex items-center justify-center text-lg">
+                  <i class="fa-solid fa-bowl-food"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-400">Wok Sizzlers</div>
+                  <div class="text-sm font-bold text-white">Hakka Street Magic</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ₹99 CRAZY VALUE DEALS -->
+    <section id="deals99" class="py-16 bg-[#101017] border-y border-brand-border/60 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-brand-crimson/20 border border-brand-crimson/40 text-brand-crimson text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-bolt-lightning"></i> Daily Pocket-Friendly Craving
+            </div>
+            <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Crazy <span class="text-brand-gold">₹99</span> Value Menu
+            </h2>
+            <p class="text-gray-400 text-sm mt-1">Unbeatable gourmet snacks and quick bites at exactly ninety-nine rupees.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-medium text-gray-400">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Available for Instant Dine-in & Express Delivery
+          </div>
+        </div>
+
+        <!-- Deals Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="deals-container">
+          <!-- Populated by JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: MENU EXPLORER -->
+    <section id="menu" class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Title & Subtitle -->
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-block px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold text-xs font-bold uppercase tracking-widest mb-3">
+            Gourmet Selection
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">
+            Discover Our Culinary Art
+          </h2>
+          <p class="text-gray-400 text-sm sm:text-base mt-3">
+            Handcrafted pizzas, juicy smash burgers, fiery wok noodles, luscious desserts, and cooling handcrafted beverages.
+          </p>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
+          <!-- Search Input -->
+          <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="menu-search-input"
+              placeholder="Search pizza, burger, momos, pasta..." 
+              class="w-full pl-11 pr-4 py-3 bg-brand-surface border border-brand-border rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors"
+            >
+          </div>
+
+          <!-- Veg / Non-Veg Quick Dietary Toggles -->
+          <div class="flex items-center gap-2 self-start md:self-auto overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+            <button class="diet-btn px-4 py-2 text-xs font-semibold rounded-lg bg-brand-card hover:bg-brand-cardlight border border-brand-border transition-colors text-gray-300" data-diet="all">
+              All Diets
+            </button>
+            <button class="diet-btn px-4 py-2 text-xs font-semibold rounded-lg bg-brand-card hover:bg-brand-cardlight border border-brand-border transition-colors text-emerald-400 flex items-center gap-1.5" data-diet="veg">
+              <span class="w-3 h-3 rounded-sm border border-emerald-500 flex items-center justify-center p-0.5">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+              </span>
+              Pure Veg
+            </button>
+            <button class="diet-btn px-4 py-2 text-xs font-semibold rounded-lg bg-brand-card hover:bg-brand-cardlight border border-brand-border transition-colors text-rose-400 flex items-center gap-1.5" data-diet="nonveg">
+              <span class="w-3 h-3 rounded-sm border border-rose-500 flex items-center justify-center p-0.5">
+                <span class="w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
+              </span>
+              Non-Veg
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-8 no-scrollbar" id="category-tabs">
+          <button class="tab-btn active px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-gold text-black shadow-md shadow-brand-gold/20 transition-all" data-category="all">
+            <i class="fa-solid fa-utensils mr-1.5"></i> All Items
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-card text-gray-300 hover:text-white border border-brand-border transition-all" data-category="trio">
+            <i class="fa-solid fa-pizza-slice mr-1.5 text-brand-gold"></i> Pizza, Burger & Noodle
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-card text-gray-300 hover:text-white border border-brand-border transition-all" data-category="nonveg">
+            <i class="fa-solid fa-drumstick-bite mr-1.5 text-rose-400"></i> Non-Veg Delights
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-card text-gray-300 hover:text-white border border-brand-border transition-all" data-category="veg">
+            <i class="fa-solid fa-leaf mr-1.5 text-emerald-400"></i> Pure Veg Specials
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-card text-gray-300 hover:text-white border border-brand-border transition-all" data-category="desserts">
+            <i class="fa-solid fa-ice-cream mr-1.5 text-pink-400"></i> Sweet Desserts
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-brand-card text-gray-300 hover:text-white border border-brand-border transition-all" data-category="drinks">
+            <i class="fa-solid fa-martini-glass-citrus mr-1.5 text-cyan-400"></i> Chilled Drinks
+          </button>
+        </div>
+
+        <!-- Menu Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="menu-grid">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Empty State for Search / Filter -->
+        <div id="no-results" class="hidden text-center py-16">
+          <div class="w-16 h-16 mx-auto rounded-full bg-brand-card flex items-center justify-center text-gray-500 text-2xl mb-4">
+            <i class="fa-solid fa-plate-wheat"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">No mouthwatering dishes found!</h3>
+          <p class="text-sm text-gray-400 mt-1">Try clearing your search keyword or switching category tabs.</p>
+          <button id="reset-filter-btn" class="mt-4 px-4 py-2 text-xs font-semibold text-brand-gold bg-brand-gold/10 hover:bg-brand-gold/20 rounded-lg">
+            Reset All Filters
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: CHEF CRAFT & HIGHLIGHTS -->
+    <section id="about" class="py-20 bg-brand-surface border-y border-brand-border/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-6 relative">
+            <div class="grid grid-cols-2 gap-4">
+              <img 
+                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop" 
+                alt="Kitchen Craft" 
+                class="rounded-2xl object-cover h-64 w-full shadow-lg border border-brand-border"
+                onerror="this.src='https://placehold.co/600x400/121217/F59E0B?text=Kitchen+Interior'"
+              >
+              <img 
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" 
+                alt="Smash Burgers Grilling" 
+                class="rounded-2xl object-cover h-64 w-full shadow-lg border border-brand-border mt-8"
+                onerror="this.src='https://placehold.co/600x400/121217/F59E0B?text=Smash+Burgers'"
+              >
+            </div>
+            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-brand-card/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-brand-border flex items-center gap-4 shadow-2xl">
+              <div class="text-brand-gold text-3xl font-heading font-extrabold">12+</div>
+              <div class="text-xs text-gray-300 font-medium">Years of culinary mastery & traditional baking secrets</div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">The Crave & Crust Philosophy</span>
+            <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+              Honest Flavors, Sourced With Integrity.
+            </h2>
+            <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+              We started Crave & Crust with one obsessive mission: to take everyday comfort food—pizzas, burgers, wok noodles, and desserts—and execute them with Michelin-level passion.
+            </p>
+            <div class="space-y-4 pt-2">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-card flex-shrink-0 flex items-center justify-center text-brand-gold text-lg border border-brand-border">
+                  <i class="fa-solid fa-wheat-awn"></i>
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-sm">48-Hour Fermented Dough</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">Light, airy crusts that digest with effortless ease and burst with sourdough character.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-card flex-shrink-0 flex items-center justify-center text-brand-gold text-lg border border-brand-border">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-sm">100% Certified Hygiene & Quality</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">Farm-fresh organic dairy, prime cuts, and zero artificial coloring or harmful additives.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-card flex-shrink-0 flex items-center justify-center text-brand-gold text-lg border border-brand-border">
+                  <i class="fa-solid fa-temperature-arrow-up"></i>
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-sm">Sizzling Hot Thermal Packing</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">Patented breathable steam-safe boxes ensuring crispy fries and piping hot cheese.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: CUSTOMER REVIEWS -->
+    <section id="reviews" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-xl mx-auto mb-14">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Real Experiences</span>
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-white mt-1">
+            Loved By Thousands Of Foodies
+          </h2>
+          <p class="text-gray-400 text-sm mt-2">See what our everyday dinner guests and takeaway cravers have to say.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Review 1 -->
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div>
+              <div class="flex text-amber-400 text-xs gap-1 mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-gray-300 text-sm italic leading-relaxed">
+                "The ₹99 Cheesy Pizza bite and Classic Burger are unbelievable for the price! You expect street food quality at ₹99, but this tastes like a ₹400 cafe. Total gem!"
+              </p>
+            </div>
+            <div class="flex items-center gap-3 mt-6 pt-4 border-t border-brand-border/60">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-gold to-brand-crimson text-black font-bold flex items-center justify-center text-sm">
+                AK
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">Ananya Kapoor</h4>
+                <span class="text-xs text-gray-400">Regular Diner • Verified Order</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div>
+              <div class="flex text-amber-400 text-xs gap-1 mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-gray-300 text-sm italic leading-relaxed">
+                "The Pepperoni and Truffle Smoked Chicken Pizza was out of this world! The crust has this smoky char and lightness. Pair it with their Mint Mojito. 10/10!"
+              </p>
+            </div>
+            <div class="flex items-center gap-3 mt-6 pt-4 border-t border-brand-border/60">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 text-black font-bold flex items-center justify-center text-sm">
+                RS
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">Rohit Sharma</h4>
+                <span class="text-xs text-gray-400">Food Blogger • Lucknow Hub</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div>
+              <div class="flex text-amber-400 text-xs gap-1 mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-gray-300 text-sm italic leading-relaxed">
+                "Their Hakka Noodles packed with wok-tossed peppers and the Molten Choco Lava cake made our weekend family night legendary. Delivered in 25 mins blazing hot!"
+              </p>
+            </div>
+            <div class="flex items-center gap-3 mt-6 pt-4 border-t border-brand-border/60">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-400 to-brand-amber text-black font-bold flex items-center justify-center text-sm">
+                PM
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">Pooja Mehra</h4>
+                <span class="text-xs text-gray-400">Family Foodie</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: LOCATION & VISIT -->
+    <section id="contact" class="py-16 bg-brand-surface border-t border-brand-border/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-10">
+          
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Visit Our Dining Lounge</span>
+            <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Crave & Crust Flagship Bistro</h3>
+            <p class="text-gray-300 text-sm">
+              Plot 42, Gourmet Boulevard, Near Cyber Hub & Metro Corridor. Cozy ambient seating, live pizza fire counters, and outdoor cocktail deck.
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-clock text-brand-gold text-lg"></i>
+                <div>
+                  <div class="text-xs text-gray-400">Kitchen Timings</div>
+                  <div class="text-sm font-semibold text-white">11:00 AM – 1:30 AM Daily</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-location-dot text-brand-crimson text-lg"></i>
+                <div>
+                  <div class="text-xs text-gray-400">Valet Parking</div>
+                  <div class="text-sm font-semibold text-white">Complimentary Available</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col gap-3">
+            <div class="p-4 bg-brand-surface rounded-2xl border border-brand-border">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Direct Table Reservation & Takeaway</h4>
+              <p class="text-base font-bold text-brand-gold">+91 98765 43210 / 011-4567890</p>
+            </div>
+            <button onclick="document.getElementById('open-cart-btn').click()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-gold to-brand-amber text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all text-center">
+              Order Online For Instant Delivery
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#09090c] border-t border-brand-border py-12 text-sm text-gray-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        
+        <!-- Brand Info -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-brand-gold flex items-center justify-center text-black font-bold">
+              <i class="fa-solid fa-fire-burner text-sm"></i>
+            </div>
+            <span class="font-heading font-extrabold text-lg text-white">CRAVE & CRUST</span>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Crafting soul-satisfying artisan pizzas, gourmet burgers, street wok noodles, and divine desserts with unrelenting passion.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="font-bold text-white text-sm mb-3">Culinary Menu</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#deals99" class="hover:text-brand-gold transition-colors">Crazy ₹99 Deals</a></li>
+            <li><a href="#menu" class="hover:text-brand-gold transition-colors">Artisan Pizzas</a></li>
+            <li><a href="#menu" class="hover:text-brand-gold transition-colors">Gourmet Smash Burgers</a></li>
+            <li><a href="#menu" class="hover:text-brand-gold transition-colors">Wok Hakka Noodles</a></li>
+            <li><a href="#menu" class="hover:text-brand-gold transition-colors">Cold Shakes & Mojitos</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Care -->
+        <div>
+          <h4 class="font-bold text-white text-sm mb-3">Service & Info</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#about" class="hover:text-brand-gold transition-colors">Hygiene & Safety</a></li>
+            <li><a href="#contact" class="hover:text-brand-gold transition-colors">Catering & Party Orders</a></li>
+            <li><a href="#contact" class="hover:text-brand-gold transition-colors">Track Live Order</a></li>
+            <li><a href="#reviews" class="hover:text-brand-gold transition-colors">Customer Feedback</a></li>
+            <li><a href="#about" class="hover:text-brand-gold transition-colors">Franchise Inquiry</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+          <h4 class="font-bold text-white text-sm mb-3">Stay In The Loop</h4>
+          <p class="text-xs text-gray-400 mb-3">Get secret ₹99 midnight discount codes and chef specials.</p>
+          <form onsubmit="event.preventDefault(); showToast('Subscribed! Check your inbox for secret coupons.', 'success');" class="flex gap-2">
+            <input 
+              type="email" 
+              placeholder="Your email" 
+              required
+              class="bg-brand-surface border border-brand-border text-white text-xs px-3 py-2 rounded-lg w-full focus:outline-none focus:border-brand-gold"
+            >
+            <button type="submit" class="bg-brand-gold text-black font-bold px-3 py-2 rounded-lg text-xs hover:brightness-110">
+              Join
+            </button>
+          </form>
+          <div class="flex items-center gap-3 mt-4 text-gray-400 text-sm">
+            <a href="#" class="hover:text-brand-gold"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-brand-gold"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-brand-gold"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="hover:text-brand-gold"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-brand-border pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3">
+        <div>&copy; 2026 Crave & Crust Bistro Pvt Ltd. All rights reserved.</div>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-gray-400">Terms of Service</a>
+          <a href="#" class="hover:text-gray-400">Privacy Policy</a>
+          <a href="#" class="hover:text-gray-400">FSSAI Lic. 1002209900331</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================ -->
+  <!-- CART SLIDE-OVER DRAWER -->
+  <!-- ============================================ -->
+  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+  
+  <div id="cart-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-brand-surface border-l border-brand-border z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+    
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-card">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-brand-gold/20 text-brand-gold flex items-center justify-center font-bold">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <div>
+          <h3 class="font-heading font-bold text-white text-base">Your Food Tray</h3>
+          <span id="drawer-item-count" class="text-xs text-gray-400">0 items selected</span>
+        </div>
+      </div>
+      <button id="close-cart-btn" class="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-brand-surface text-base">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body (Items list) -->
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-4">
+      <!-- Items dynamically injected -->
+    </div>
+
+    <!-- Empty Cart State -->
+    <div id="cart-empty-state" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center">
+      <div class="w-20 h-20 rounded-full bg-brand-card flex items-center justify-center text-3xl text-gray-500 mb-4">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <h4 class="text-base font-bold text-white">Your tray is empty!</h4>
+      <p class="text-xs text-gray-400 max-w-xs mt-1">Explore our juicy pizzas, burgers, noodles, and ₹99 value menu to fill it up.</p>
+      <button onclick="document.getElementById('close-cart-btn').click(); location.href='#menu';" class="mt-4 px-5 py-2.5 rounded-xl bg-brand-gold text-black font-bold text-xs">
+        Browse Menu Now
+      </button>
+    </div>
+
+    <!-- Drawer Footer (Bill breakdown & Checkout) -->
+    <div id="cart-footer" class="p-5 border-t border-brand-border bg-brand-card/90 space-y-3">
+      
+      <!-- Promo code input -->
+      <div class="flex gap-2">
+        <input 
+          type="text" 
+          id="coupon-input" 
+          placeholder="Promo code (e.g. TASTY99)" 
+          class="bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-xs text-white uppercase tracking-wider focus:outline-none focus:border-brand-gold w-full"
+        >
+        <button id="apply-coupon-btn" class="px-4 py-2 bg-brand-cardlight border border-brand-border hover:border-brand-gold text-xs font-bold text-brand-gold rounded-xl whitespace-nowrap transition-colors">
+          Apply
+        </button>
+      </div>
+      <div id="coupon-message" class="text-[11px] hidden font-semibold"></div>
+
+      <!-- Price summary -->
+      <div class="space-y-1.5 text-xs text-gray-300 pt-1">
+        <div class="flex justify-between">
+          <span>Subtotal</span>
+          <span id="bill-subtotal" class="font-bold text-white">₹0</span>
+        </div>
+        <div class="flex justify-between text-emerald-400" id="bill-discount-row">
+          <span>Discount</span>
+          <span id="bill-discount">-₹0</span>
+        </div>
+        <div class="flex justify-between text-gray-400">
+          <span>Delivery Fee (Within 5km)</span>
+          <span id="bill-delivery" class="text-white">FREE</span>
+        </div>
+        <div class="flex justify-between text-gray-400">
+          <span>Taxes & Kitchen Packaging (5%)</span>
+          <span id="bill-taxes" class="text-white">₹0</span>
+        </div>
+        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-brand-border">
+          <span>Grand Total</span>
+          <span id="bill-grand-total" class="text-brand-gold font-heading text-lg">₹0</span>
+        </div>
+      </div>
+
+      <button id="proceed-checkout-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-gold to-brand-amber text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+        <span>Proceed To Checkout</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CHECKOUT MODAL -->
+  <!-- ============================================ -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-brand-surface border border-brand-border rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+      
+      <!-- Modal Header -->
+      <div class="p-5 bg-brand-card border-b border-brand-border flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-truck-fast text-brand-gold"></i>
+          <h3 class="font-heading font-bold text-white text-base">Complete Your Order</h3>
+        </div>
+        <button id="close-checkout-btn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-brand-surface">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form -->
+      <form id="checkout-form" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Your Full Name *</label>
+          <input type="text" id="cust-name" required placeholder="e.g. Yash Malhotra" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-gold">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Phone Number *</label>
+            <input type="tel" id="cust-phone" required placeholder="e.g. 9876543210" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-gold">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Floor / Flat / Landmark</label>
+            <input type="text" id="cust-landmark" placeholder="Apt 4B, Near Metro" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-gold">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Delivery Address *</label>
+          <textarea id="cust-address" required rows="2" placeholder="Full street address and area..." class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold"></textarea>
+        </div>
+
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-2">Select Payment Method</label>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <label class="payment-option border border-brand-gold bg-brand-gold/10 p-3 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center">
+              <input type="radio" name="payment" value="upi" checked class="hidden">
+              <i class="fa-solid fa-qrcode text-brand-gold text-lg"></i>
+              <span class="font-bold text-white">Instant UPI</span>
+            </label>
+            <label class="payment-option border border-brand-border bg-brand-card p-3 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center">
+              <input type="radio" name="payment" value="cod" class="hidden">
+              <i class="fa-solid fa-money-bill-wave text-emerald-400 text-lg"></i>
+              <span class="font-bold text-white">Cash / COD</span>
+            </label>
+            <label class="payment-option border border-brand-border bg-brand-card p-3 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center">
+              <input type="radio" name="payment" value="card" class="hidden">
+              <i class="fa-regular fa-credit-card text-blue-400 text-lg"></i>
+              <span class="font-bold text-white">Card / POS</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Order Summary Pill -->
+        <div class="bg-brand-card p-4 rounded-2xl border border-brand-border flex items-center justify-between text-xs">
+          <div>
+            <div class="text-gray-400">Total Payable Amount</div>
+            <div class="text-sm font-extrabold text-white">Includes taxes & express packing</div>
+          </div>
+          <div id="checkout-total-val" class="font-heading text-xl font-extrabold text-brand-gold">₹0</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-brand-amber text-black font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20">
+          <i class="fa-solid fa-lock text-xs"></i>
+          <span>Confirm & Place Express Order</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- ORDER SUCCESS CONFIRMATION MODAL -->
+  <!-- ============================================ -->
+  <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-brand-surface border border-brand-border rounded-3xl w-full max-w-md p-8 text-center shadow-2xl transform scale-90 transition-transform duration-300 relative">
+      <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-4xl mb-4 animate-bounce">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="font-heading text-2xl font-extrabold text-white">Order Fired Up!</h3>
+      <p class="text-xs text-gray-300 mt-2 leading-relaxed">
+        Your delicious items have reached our live kitchen station. Our head chef is prepping your meal right now!
+      </p>
+      
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-4 my-5 text-left text-xs space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Order ID:</span>
+          <span id="success-order-id" class="font-mono font-bold text-white">#CC-8921</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Estimated Delivery:</span>
+          <span class="font-bold text-emerald-400">25 - 30 Minutes</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Payment Status:</span>
+          <span id="success-payment-type" class="font-bold text-brand-gold">Prepaid / UPI</span>
+        </div>
+      </div>
+
+      <button id="close-success-btn" class="w-full py-3 rounded-xl bg-brand-gold text-black font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all">
+        Back to Bistro Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- JAVASCRIPT DATA & INTERACTIVITY -->
+  <!-- ============================================ -->
+  <script>
+    /* --------------------------------------------------
+       1. DATABASE: 99 OFFERS & FULL MENU DATA
+    -------------------------------------------------- */
+    const deals99Data = [
+      {
+        id: 'deal-1',
+        name: 'Cheesy Single Pizza Bite',
+        desc: 'Individual 6-inch thin crust with golden mozzarella, Italian herbs, and savory Marinara.',
+        price: 99,
+        originalPrice: 169,
+        category: 'trio',
+        isVeg: true,
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.8,
+        prepTime: '15m',
+        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'deal-2',
+        name: 'Crispy Crunch Herb Burger',
+        desc: 'Crispy spiced golden potato patty, fresh tomato slice, sliced lettuce & thousand island sauce.',
+        price: 99,
+        originalPrice: 159,
+        category: 'trio',
+        isVeg: true,
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.7,
+        prepTime: '12m',
+        image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'deal-3',
+        name: 'Street Hakka Wok Noodles',
+        desc: 'Smoky wok tossed noodles with crunchy cabbage, bell peppers, soy sauce, and scallions.',
+        price: 99,
+        originalPrice: 149,
+        category: 'trio',
+        isVeg: true,
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.9,
+        prepTime: '14m',
+        image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'deal-4',
+        name: 'Loaded Peri-Peri Crinkle Fries',
+        desc: 'Freshly fried hot potato fries dusted with African birds eye peri-peri spice & garlic dip.',
+        price: 99,
+        originalPrice: 140,
+        category: 'veg',
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.8,
+        prepTime: '10m',
+        image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'deal-5',
+        name: 'Warm Choco Lava Delight',
+        desc: 'Decadent dark chocolate molten center cake baked fresh with warm cocoa heart.',
+        price: 99,
+        originalPrice: 149,
+        category: 'desserts',
+        isVeg: true,
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.9,
+        prepTime: '8m',
+        image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'deal-6',
+        name: 'Virgin Mint Lime Mojito',
+        desc: 'Muddled fresh garden mint sprigs, zesty lemon wedges, cracked ice & bubbly fizz.',
+        price: 99,
+        originalPrice: 139,
+        category: 'drinks',
+        isVeg: true,
+        tag: 'Crazy ₹99 Deal',
+        rating: 4.7,
+        prepTime: '5m',
+        image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=600&auto=format&fit=crop'
+      }
+    ];
+
+    const menuItems = [
+      // NON-VEG ITEMS
+      {
+        id: 'menu-nv-1',
+        name: 'Truffle Chicken Smash Burger',
+        desc: 'Double seasoned chicken patties, melted cheddar, caramelized onions, smoked garlic aioli.',
+        price: 249,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.9,
+        prepTime: '18m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-nv-2',
+        name: 'Rustic Pepperoni Crust Pizza',
+        desc: 'Wood-fired sourdough with cured spicy pepperoni, blistered mozzarella & fresh oregano.',
+        price: 389,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.9,
+        prepTime: '20m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-nv-3',
+        name: 'Chicken Schezwan Wok Noodles',
+        desc: 'Tender chicken shreds, egg ribbon, wok-charred scallions, tossed in fiery house red chili paste.',
+        price: 219,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.8,
+        prepTime: '15m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-nv-4',
+        name: 'Smoked Butter Chicken Rice Bowl',
+        desc: 'Tandoor-charred chicken simmered in velvet cashew makhani gravy over fragrant basmati.',
+        price: 279,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.9,
+        prepTime: '18m',
+        image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-nv-5',
+        name: 'Crispy Golden Hot Chicken Wings',
+        desc: '6 pcs jumbo wings, double fried for acoustic crunch, tossed in sticky BBQ honey mustard.',
+        price: 229,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.8,
+        prepTime: '15m',
+        image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-nv-6',
+        name: 'BBQ Chicken Sub Sandwich',
+        desc: 'Slow roasted pulled chicken, smoked chipotle dressing, gherkins & Monterey Jack in toasted brioche.',
+        price: 209,
+        category: 'nonveg',
+        isVeg: false,
+        rating: 4.7,
+        prepTime: '14m',
+        image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=600&auto=format&fit=crop'
+      },
+
+      // PURE VEG ITEMS
+      {
+        id: 'menu-v-1',
+        name: 'Paneer Tikka Makhani Pizza',
+        desc: 'Clay oven charred malai paneer cubes, capsicum, red paprika, spiced makhani cheese base.',
+        price: 329,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '18m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-v-2',
+        name: 'Farmhouse Monster Veggie Burger',
+        desc: 'Crunchy potato-spinach patty, grilled halloumi, pickled red onions & creamy ranch mayo.',
+        price: 199,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.7,
+        prepTime: '14m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-v-3',
+        name: 'Chilli Garlic Schezwan Noodles',
+        desc: 'Silky ramen noodles tossed with roasted garlic slivers, broccoli, baby corn & spicy Sichuan chili.',
+        price: 189,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '15m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-v-4',
+        name: 'Crispy Panko Paneer Bites',
+        desc: 'Golden fried herb crusted paneer cubes served with smoky tandoori dip & jalapeño mayo.',
+        price: 189,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.6,
+        prepTime: '12m',
+        image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-v-5',
+        name: 'Four-Cheese Margherita Supreme',
+        desc: 'Buffalo mozzarella, aged cheddar, gouda & parmesan shavings on San Marzano tomato spread.',
+        price: 319,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.9,
+        prepTime: '18m',
+        isTrio: true,
+        image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-v-6',
+        name: 'Crispy Veg Dim Sums (6 Pcs)',
+        desc: 'Steamed & pan crisped dumplings filled with water chestnuts, mushroom & sweet corn.',
+        price: 179,
+        category: 'veg',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '14m',
+        image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=600&auto=format&fit=crop'
+      },
+
+      // DESSERTS
+      {
+        id: 'menu-des-1',
+        name: 'Molten Belgian Choco Lava Cake',
+        desc: 'Gooey 70% dark Belgian chocolate center that flows luxuriously with every spoon cut.',
+        price: 149,
+        category: 'desserts',
+        isVeg: true,
+        rating: 4.9,
+        prepTime: '10m',
+        image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-des-2',
+        name: 'Classic NY Red Velvet Slice',
+        desc: 'Layered crimson velvet sponge with Madagascar vanilla cream cheese frosting.',
+        price: 169,
+        category: 'desserts',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '5m',
+        image: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-des-3',
+        name: 'Sizzling Brownie with Ice Cream',
+        desc: 'Hot walnut brownie served over a scorching sizzler pan topped with vanilla bean ice cream.',
+        price: 199,
+        category: 'desserts',
+        isVeg: true,
+        rating: 4.9,
+        prepTime: '10m',
+        image: 'https://images.unsplash.com/photo-1607920591413-4ec007e70023?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-des-4',
+        name: 'Artisan Espresso Tiramisu Tub',
+        desc: 'Savoiardi ladyfingers steeped in espresso, layered with whipped mascarpone cream.',
+        price: 189,
+        category: 'desserts',
+        isVeg: true,
+        rating: 4.9,
+        prepTime: '5m',
+        image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=600&auto=format&fit=crop'
+      },
+
+      // DRINKS
+      {
+        id: 'menu-drk-1',
+        name: 'Virgin Blueberry Mint Mojito',
+        desc: 'Wild blueberry compote, crushed mint, fresh lime slices, splash of sparkling soda.',
+        price: 139,
+        category: 'drinks',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '5m',
+        image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-drk-2',
+        name: 'Belgian Thick Chocolate Shake',
+        desc: 'Decadent chilled shake blended with Belgian chocolate gelato and dark chocolate shavings.',
+        price: 169,
+        category: 'drinks',
+        isVeg: true,
+        rating: 4.9,
+        prepTime: '6m',
+        image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-drk-3',
+        name: 'Iced Salted Caramel Macchiato',
+        desc: 'Double shot arabica espresso poured over cold milk, ice cubes and salted caramel drizzle.',
+        price: 159,
+        category: 'drinks',
+        isVeg: true,
+        rating: 4.7,
+        prepTime: '6m',
+        image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'menu-drk-4',
+        name: 'Sparkling Peach Iced Tea',
+        desc: 'Brewed ceylon black tea infused with sweet peach nectar and fresh lemon disc.',
+        price: 129,
+        category: 'drinks',
+        isVeg: true,
+        rating: 4.8,
+        prepTime: '5m',
+        image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=600&auto=format&fit=crop'
+      }
+    ];
+
+    /* --------------------------------------------------
+       2. APPLICATION STATE
+    -------------------------------------------------- */
+    let cart = []; // Array of { id, name, price, qty, image, isVeg }
+    let activeCategory = 'all';
+    let activeDiet = 'all';
+    let searchQuery = '';
+    let appliedCoupon = null; // e.g. { code: 'TASTY99', discountPercent: 15 }
+
+    /* --------------------------------------------------
+       3. RENDER FUNCTIONS
+    -------------------------------------------------- */
+    // Helper to produce Veg/Non-Veg Badge
+    function getVegBadge(isVeg) {
+      if (isVeg) {
+        return `
+          <span class="inline-flex items-center justify-center w-4 h-4 rounded-sm border border-emerald-500 bg-emerald-950/40" title="Pure Veg">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </span>
+        `;
+      }
+      return `
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-sm border border-rose-500 bg-rose-950/40" title="Non-Veg">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+        </span>
+      `;
+    }
+
+    // Render ₹99 Value Offers
+    function renderDeals() {
+      const container = document.getElementById('deals-container');
+      container.innerHTML = deals99Data.map(deal => `
+        <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden flex flex-col justify-between hover:border-brand-gold/60 card-glow transition-all duration-300 group">
+          <div class="relative h-48 overflow-hidden">
+            <img 
+              src="${deal.image}" 
+              alt="${deal.name}" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.src='https://placehold.co/600x400/121217/F59E0B?text=Special+Deal'"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+            
+            <div class="absolute top-3 left-3 bg-brand-crimson text-white text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1">
+              <i class="fa-solid fa-tag"></i> ₹99 ONLY
+            </div>
+
+            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md">
+              ${getVegBadge(deal.isVeg)}
+            </div>
+
+            <div class="absolute bottom-2.5 left-3 flex items-center gap-2 text-xs text-amber-300 font-bold">
+              <span>★ ${deal.rating}</span>
+              <span class="text-gray-400">•</span>
+              <span class="text-gray-300 text-[11px]"><i class="fa-regular fa-clock"></i> ${deal.prepTime}</span>
+            </div>
+          </div>
+
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-gold transition-colors">
+                ${deal.name}
+              </h3>
+              <p class="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                ${deal.desc}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 mt-4 border-t border-brand-border/60">
+              <div class="flex items-baseline gap-2">
+                <span class="font-heading font-extrabold text-2xl text-brand-gold">₹99</span>
+                <span class="text-xs text-gray-500 line-through">₹${deal.originalPrice}</span>
+              </div>
+              <button 
+                onclick="addToCart('${deal.id}', '${deal.name.replace(/'/g, "\\'")}', 99, '${deal.image}', ${deal.isVeg})" 
+                class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-amber-400 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-md hover:shadow-brand-gold/30 active:scale-95 transition-all"
+              >
+                <i class="fa-solid fa-plus"></i> Add
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Full Menu Grid based on Category & Search
+    function renderMenu() {
+      const grid = document.getElementById('menu-grid');
+      const emptyState = document.getElementById('no-results');
+
+      // Filter Logic
+      const filtered = menuItems.filter(item => {
+        // Category Filter
+        let matchesCategory = true;
+        if (activeCategory === 'trio') {
+          matchesCategory = item.isTrio === true;
+        } else if (activeCategory !== 'all') {
+          matchesCategory = item.category === activeCategory;
+        }
+
+        // Diet Filter
+        let matchesDiet = true;
+        if (activeDiet === 'veg') matchesDiet = item.isVeg === true;
+        if (activeDiet === 'nonveg') matchesDiet = item.isVeg === false;
+
+        // Search Query
+        let matchesSearch = true;
+        if (searchQuery.trim() !== '') {
+          const q = searchQuery.toLowerCase();
+          matchesSearch = item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q);
+        }
+
+        return matchesCategory && matchesDiet && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden flex flex-col justify-between hover:border-brand-gold/40 card-glow transition-all duration-300 group">
+          <div class="relative h-44 overflow-hidden">
+            <img 
+              src="${item.image}" 
+              alt="${item.name}" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.src='https://placehold.co/600x400/121217/F59E0B?text=Crave+Crust'"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+            
+            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md">
+              ${getVegBadge(item.isVeg)}
+            </div>
+
+            <div class="absolute bottom-2.5 left-3 flex items-center gap-2 text-xs text-amber-300 font-bold">
+              <span>★ ${item.rating}</span>
+              <span class="text-gray-400">•</span>
+              <span class="text-gray-300 text-[11px]"><i class="fa-regular fa-clock"></i> ${item.prepTime}</span>
+            </div>
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-base text-white group-hover:text-brand-gold transition-colors line-clamp-1">
+                ${item.name}
+              </h3>
+              <p class="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                ${item.desc}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 mt-3 border-t border-brand-border/60">
+              <span class="font-heading font-extrabold text-xl text-white">₹${item.price}</span>
+              <button 
+                onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.image}', ${item.isVeg})" 
+                class="px-3.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-gold hover:bg-brand-gold hover:text-black font-bold text-xs text-brand-gold flex items-center gap-1.5 transition-all active:scale-95"
+              >
+                <i class="fa-solid fa-plus text-[10px]"></i> Add To Tray
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --------------------------------------------------
+       4. CART MANAGEMENT & CALCULATIONS
+    -------------------------------------------------- */
+    function addToCart(id, name, price, image, isVeg) {
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, name, price, qty: 1, image, isVeg });
+      }
+      updateCartUI();
+      showToast(`Added "${name}" to tray!`, 'success');
+    }
+
+    function changeItemQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      updateCartUI();
+    }
+
+    function removeItem(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+      showToast('Item removed from tray.', 'info');
+    }
+
+    function updateCartUI() {
+      // 1. Update Badges
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('cart-badge-count').textContent = totalCount;
+      document.getElementById('drawer-item-count').textContent = `${totalCount} item${totalCount === 1 ? '' : 's'} selected`;
+
+      const container = document.getElementById('cart-items-container');
+      const emptyState = document.getElementById('cart-empty-state');
+      const footer = document.getElementById('cart-footer');
+
+      if (cart.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        footer.classList.add('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      footer.classList.remove('hidden');
+
+      // 2. Render Cart Item Cards
+      container.innerHTML = cart.map(item => `
+        <div class="flex items-center gap-3 p-3 bg-brand-card rounded-2xl border border-brand-border">
+          <img src="${item.image}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" onerror="this.src='https://placehold.co/100x100/121217/F59E0B?text=Bite'">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              ${getVegBadge(item.isVeg)}
+              <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+            </div>
+            <div class="text-xs font-extrabold text-brand-gold mt-1">₹${item.price}</div>
+          </div>
+          <div class="flex items-center gap-2 bg-brand-surface px-2 py-1 rounded-xl border border-brand-border">
+            <button onclick="changeItemQty('${item.id}', -1)" class="text-gray-400 hover:text-white text-xs px-1 font-bold">-</button>
+            <span class="text-xs font-extrabold text-white min-w-[14px] text-center">${item.qty}</span>
+            <button onclick="changeItemQty('${item.id}', 1)" class="text-gray-400 hover:text-white text-xs px-1 font-bold">+</button>
+          </div>
+          <button onclick="removeItem('${item.id}')" class="text-gray-500 hover:text-rose-400 text-xs p-1">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
+
+      // 3. Price calculations
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      let discount = 0;
+      if (appliedCoupon) {
+        discount = Math.round((subtotal * appliedCoupon.discountPercent) / 100);
+      }
+      const taxes = Math.round((subtotal - discount) * 0.05); // 5% GST
+      const grandTotal = Math.max(0, (subtotal - discount) + taxes);
+
+      document.getElementById('bill-subtotal').textContent = `₹${subtotal}`;
+      document.getElementById('bill-discount').textContent = `-₹${discount}`;
+      document.getElementById('bill-taxes').textContent = `₹${taxes}`;
+      document.getElementById('bill-grand-total').textContent = `₹${grandTotal}`;
+      document.getElementById('checkout-total-val').textContent = `₹${grandTotal}`;
+    }
+
+    /* --------------------------------------------------
+       5. TOAST NOTIFICATION UTILITY
+    -------------------------------------------------- */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let icon = 'fa-info-circle';
+      let accent = 'border-brand-gold text-brand-gold';
+      if (type === 'success') {
+        icon = 'fa-circle-check';
+        accent = 'border-emerald-500 text-emerald-400';
+      } else if (type === 'error') {
+        icon = 'fa-circle-xmark';
+        accent = 'border-rose-500 text-rose-400';
+      }
+
+      toast.className = `pointer-events-auto flex items-center gap-3 bg-brand-surface/95 backdrop-blur-md px-4 py-3 rounded-2xl border ${accent} text-xs font-semibold text-white shadow-2xl transition-all duration-300 transform translate-y-3 opacity-0`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} text-base"></i>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove('translate-y-3', 'opacity-0');
+      }, 10);
+
+      // Auto Dismiss
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-x-4');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    /* --------------------------------------------------
+       6. DOM LISTENERS & MODAL CONTROLS
+    -------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Views
+      renderDeals();
+      renderMenu();
+      updateCartUI();
+
+      // Mobile Drawer Toggle
+      const mobileToggle = document.getElementById('mobile-menu-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      mobileToggle.addEventListener('click', () => {
+        mobileNav.classList.toggle('hidden');
+      });
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => mobileNav.classList.add('hidden'));
+      });
+
+      // Cart Slide-over
+      const cartOverlay = document.getElementById('cart-drawer-overlay');
+      const cartDrawer = document.getElementById('cart-drawer');
+      const openCartBtn = document.getElementById('open-cart-btn');
+      const closeCartBtn = document.getElementById('close-cart-btn');
+
+      function openCart() {
+        cartOverlay.classList.remove('pointer-events-none', 'opacity-0');
+        cartDrawer.classList.remove('translate-x-full');
+      }
+
+      function closeCart() {
+        cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+        cartDrawer.classList.add('translate-x-full');
+      }
+
+      openCartBtn.addEventListener('click', openCart);
+      closeCartBtn.addEventListener('click', closeCart);
+      cartOverlay.addEventListener('click', closeCart);
+
+      // Category Tabs Switching
+      const categoryButtons = document.querySelectorAll('.tab-btn');
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => {
+            b.classList.remove('bg-brand-gold', 'text-black', 'shadow-md', 'shadow-brand-gold/20');
+            b.classList.add('bg-brand-card', 'text-gray-300', 'border', 'border-brand-border');
+          });
+          btn.classList.add('bg-brand-gold', 'text-black', 'shadow-md', 'shadow-brand-gold/20');
+          btn.classList.remove('bg-brand-card', 'text-gray-300', 'border', 'border-brand-border');
+
+          activeCategory = btn.getAttribute('data-category');
+          renderMenu();
+        });
+      });
+
+      // Diet Toggle Buttons
+      const dietButtons = document.querySelectorAll('.diet-btn');
+      dietButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          dietButtons.forEach(b => b.classList.remove('ring-2', 'ring-brand-gold'));
+          btn.classList.add('ring-2', 'ring-brand-gold');
+          activeDiet = btn.getAttribute('data-diet');
+          renderMenu();
+        });
+      });
+
+      // Live Menu Search Bar
+      const searchInput = document.getElementById('menu-search-input');
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderMenu();
+      });
+
+      // Reset Filter Trigger
+      document.getElementById('reset-filter-btn').addEventListener('click', () => {
+        searchQuery = '';
+        searchInput.value = '';
+        activeCategory = 'all';
+        activeDiet = 'all';
+        
+        categoryButtons[0].click();
+        dietButtons[0].click();
+      });
+
+      // Promo Coupon Handler
+      const couponBtn = document.getElementById('apply-coupon-btn');
+      const couponInput = document.getElementById('coupon-input');
+      const couponMsg = document.getElementById('coupon-message');
+
+      couponBtn.addEventListener('click', () => {
+        const code = couponInput.value.trim().toUpperCase();
+        if (code === 'TASTY99') {
+          appliedCoupon = { code: 'TASTY99', discountPercent: 15 };
+          couponMsg.textContent = '🎉 15% VIP discount applied!';
+          couponMsg.className = 'text-[11px] font-semibold text-emerald-400 block';
+          updateCartUI();
+          showToast('Coupon TASTY99 applied! 15% OFF', 'success');
+        } else if (code === '') {
+          couponMsg.textContent = 'Please enter a voucher code.';
+          couponMsg.className = 'text-[11px] font-semibold text-rose-400 block';
+        } else {
+          couponMsg.textContent = 'Invalid promo code. Try "TASTY99"';
+          couponMsg.className = 'text-[11px] font-semibold text-rose-400 block';
+        }
+      });
+
+      // Checkout Modal Open / Close
+      const checkoutModal = document.getElementById('checkout-modal');
+      const proceedBtn = document.getElementById('proceed-checkout-btn');
+      const closeCheckoutBtn = document.getElementById('close-checkout-btn');
+
+      proceedBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+          showToast('Please add items to your tray first!', 'error');
+          return;
+        }
+        closeCart();
+        checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
+        checkoutModal.querySelector('div').classList.remove('scale-95');
+      });
+
+      function closeCheckout() {
+        checkoutModal.classList.add('opacity-0', 'pointer-events-none');
+        checkoutModal.querySelector('div').classList.add('scale-95');
+      }
+
+      closeCheckoutBtn.addEventListener('click', closeCheckout);
+
+      // Payment Option Selection Styling
+      const paymentOptions = document.querySelectorAll('.payment-option');
+      paymentOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+          paymentOptions.forEach(o => {
+            o.classList.remove('border-brand-gold', 'bg-brand-gold/10');
+            o.classList.add('border-brand-border', 'bg-brand-card');
+          });
+          opt.classList.add('border-brand-gold', 'bg-brand-gold/10');
+          opt.classList.remove('border-brand-border', 'bg-brand-card');
+        });
+      });
+
+      // Checkout Form Submission & Confirmation
+      const checkoutForm = document.getElementById('checkout-form');
+      const successModal = document.getElementById('success-modal');
+      const closeSuccessBtn = document.getElementById('close-success-btn');
+
+      checkoutForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('cust-name').value;
+        const selectedPay = document.querySelector('input[name="payment"]:checked').value.toUpperCase();
+
+        // Generate Random Order ID
+        const randomId = '#CC-' + Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('success-order-id').textContent = randomId;
+        document.getElementById('success-payment-type').textContent = selectedPay === 'COD' ? 'Cash on Delivery' : 'Paid via ' + selectedPay;
+
+        // Reset and switch modal
+        closeCheckout();
+        checkoutForm.reset();
+        cart = [];
+        appliedCoupon = null;
+        updateCartUI();
+
+        successModal.classList.remove('opacity-0', 'pointer-events-none');
+        successModal.querySelector('div').classList.remove('scale-90');
+      });
+
+      closeSuccessBtn.addEventListener('click', () => {
+        successModal.classList.add('opacity-0', 'pointer-events-none');
+        successModal.querySelector('div').classList.add('scale-90');
+      });
+    });
+  </script>
+</body>
+</html>
